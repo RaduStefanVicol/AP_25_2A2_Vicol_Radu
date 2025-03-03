@@ -1,5 +1,4 @@
 import java.util.Random;
-import java.util.Arrays;
 
 public class Lab1 {
     public static void main(String[] args) {
@@ -34,6 +33,8 @@ public class Lab1 {
 
     void homework(int n, int k) {
         //Do stuff
+        //Start measuring time:
+        long t1 = System.currentTimeMillis();
         System.out.println("\u0394\u03B4"); //greek characters
 
         if (k > n) {
@@ -92,7 +93,7 @@ public class Lab1 {
                 }
         }
         //string representation matrice de adiacenta
-        if (n < 30000) {
+        if (n <= 50) {
             System.out.println("\nMatrix string representation:");
             System.out.println("[ "); //change to print for string
             for (i = 0; i < n; i++) {
@@ -136,7 +137,9 @@ public class Lab1 {
         System.out.println("Suma grade: " + sumaGrade + "; 2*m: " + (2 * m));
 
         //Dysplay time to run app for n>30000:
-
+        long t2 = System.currentTimeMillis();
+        if (n>30000)
+            System.out.println("Time taken: " + (t2 - t1) / 1000  + " seconds");
     }
 
     void bonus() {

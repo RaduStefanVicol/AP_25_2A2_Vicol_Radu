@@ -1,4 +1,6 @@
+import java.util.LinkedList;
 import java.util.Random;
+import java.util.ArrayList;
 
 public class Lab1 {
     public static void main(String[] args) {
@@ -7,20 +9,19 @@ public class Lab1 {
             int n = Integer.parseInt(args[0]);
             int k = Integer.parseInt(args[1]);
             lab1.homework(n, k);
-        }
-        else lab1.compulsory();
+        } else lab1.compulsory();
     }
 
     void compulsory() {
         System.out.println("Hello world!");
         String[] languages = {"C", "C++", "C#", "Python", "Go", "Rust", "JavaScript", "PHP", "Swift", "Java"};
-        int n = (int) (Math.random() * 1_000_000);
-        n *= 3;
+        int n = (int) (Math.random() * 1_000_000); //alegem un numar random
+        n *= 3;             //efectuam operatiile cerute
         n += 0b10101;
         n += 0xFF;
         n *= 6;
         int result = 0;
-        while (n > 0) {
+        while (n > 0) { //adunam cifrele pana cand obtinem un nr de o cifra
             result = result + n % 10;
             n /= 10;
             if (result > 9 && n == 0) {
@@ -37,7 +38,7 @@ public class Lab1 {
         long t1 = System.currentTimeMillis();
         System.out.println("\u0394\u03B4"); //greek characters
 
-        if (k > n) {
+        if (k > n) { //eroare pentru cererea de clique/mult stabila > graf
             System.out.println("Error: subgraph bigger than graph");
             System.exit(-1);
         }
@@ -138,13 +139,79 @@ public class Lab1 {
 
         //Dysplay time to run app for n>30000:
         long t2 = System.currentTimeMillis();
-        if (n>30000)
-            System.out.println("Time taken: " + (t2 - t1) / 1000  + " seconds");
+        if (n > 30000)
+            System.out.println("Time taken: " + (t2 - t1) / 1000 + " seconds");
+        System.out.println(("\n\n\nBonus:"));
+        bonus(graphMatrix, n, k);
     }
 
-    void bonus() {
-        //Do stuff
+    void bonus(int[][] graph, int n, int k) {
+        ArrayList<Integer> subgraph = new ArrayList<Integer>();
+        int gasitClique = 0, gasitMultStabila = 0;
+
+        for (int i = 0; i < n; i++) {
+            subgraph.clear();  // Clear the subgraph for each new check
+            if (generateSubgraph(graph, n, k, 0, i, 0, subgraph) && gasitMultStabila == 0) {
+                System.out.println("Exista o multime stabila de dimensiune " + k);
+                gasitMultStabila = 1;
+                for (int i2 = 0; i2 < subgraph.size(); i2++) {
+                    System.out.print(subgraph.get(i2) + " ");
+                }
+                System.out.println();
+            }
+
+            subgraph.clear();  // Clear the subgraph for the next check
+            if (generateSubgraph(graph, n, k, 0, i, 1, subgraph) && gasitClique == 0) {
+                System.out.println("Exista un clique de dimensiune " + k);
+                gasitClique = 1;
+                for (int i2 = 0; i2 < subgraph.size(); i2++) {
+                    System.out.print(subgraph.get(i2) + " ");
+                }
+                System.out.println();
+            }
+        }
+
+        if (gasitClique == 0) {
+            System.out.println("Nu exista clique de dimensiune " + k);
+            for (int i2 = 0; i2 < subgraph.size(); i2++) {
+                System.out.print(subgraph.get(i2) + " ");
+            }
+            System.out.println();
+        }
+        if (gasitMultStabila == 0) {
+            System.out.println("Nu exista multime stabila de dimensiune " + k);
+            for (int i2 = 0; i2 < subgraph.size(); i2++) {
+                System.out.print(subgraph.get(i2) + " ");
+            }
+            System.out.println();
+        }
     }
 
-
+    boolean generateSubgraph(int[][] graph, int n, int k, int size, int start, int val, ArrayList<Integer> subgraph) {
+        subgraph.add(start);
+        size++;
+        // If we found a subgraph of size k, return true
+        if (size == k) {
+            return true;
+        }
+        for (int i = start + 1; i < n; i++) {
+            boolean valid = true;
+            // Check if this node is valid
+            for (int node : subgraph) {
+                if (graph[node][i] != val) {
+                    valid = false;
+                    break;
+                }
+            }
+            // If valid, recurse
+            if (valid) {
+                if (generateSubgraph(graph, n, k, size, i, val, subgraph)) {
+                    return true;
+                }
+            }
+        }
+        // Backtrack: remove the last element before returning
+        subgraph.remove(subgraph.size() - 1);
+        return false;
+    }
 }

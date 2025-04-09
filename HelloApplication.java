@@ -23,6 +23,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class HelloApplication extends Application {
     private int numberOfPlayers = -1;
     private Pane centerPane;
+    public static final Object printLock = new Object();
 
     public static BlockingQueue<Letter> getLetterBag() {
         return letterBag;

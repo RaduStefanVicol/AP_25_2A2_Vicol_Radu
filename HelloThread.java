@@ -21,7 +21,10 @@ public class HelloThread extends Thread {
             boolean taken = removeLetterFromBag(randomLetter);
             if (taken) {
                 player.addLetter(randomLetter);
-                System.out.println("Player: " + player.getName() + " took out " + randomLetter);
+                synchronized (HelloApplication.printLock) {
+                    System.out.println("Player: " + player.getName() + " took out " + randomLetter);
+                    player.displayLetters();
+                }
             }
         }
         try {

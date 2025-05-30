@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Solution {
     private Project[] projects; //assigned to students
 
@@ -29,4 +32,53 @@ public class Solution {
             }
         }
     }
+
+    public static void solveHall(Problem pb){
+        boolean[] inca_vor= {true};
+        Student[] students = pb.getStudents();
+        List<Student> selectedStudents = new ArrayList<>();
+        backtrackHall(students, selectedStudents, 0, inca_vor);
+        System.out.println("Conform teoremei lui Hall:");
+        if (inca_vor[0])
+            System.out.println("Alocarea unui proiect fiecarui student e posibila");
+        else System.out.println("Alocarea unui proiect fiecarui student NU e posibila");
+    }
+
+    private static void backtrackHall(Student[] students, List<Student> selectedStudents, int index, boolean[] incaVor) {
+        if (!incaVor[0]) return;
+        if (!selectedStudents.isEmpty()) {
+            int uniqueCount = 0;
+            List<Project> tempMarked = new ArrayList<>();
+            for (Student s : selectedStudents) {
+                Project[] wantedProjects = s.getWantedProjects();
+                if (wantedProjects != null) {
+                    for (Project p : wantedProjects) {
+                        if (!p.isTaken()) {
+                            p.selectProject();
+                            tempMarked.add(p);
+                            uniqueCount++;
+                        }
+                    }
+                }
+            }
+            if (uniqueCount < selectedStudents.size()) {
+                incaVor[0] = false;
+                for (Project p : tempMarked) {
+                    p.abandonProject();
+                }
+                return;  // Exit recursion
+            }
+
+            for (Project p : tempMarked) {
+                p.abandonProject();
+            }
+        }
+
+        for (int i = index; i < students.length; i++) {
+            selectedStudents.add(students[i]);
+            backtrackHall(students, selectedStudents, i + 1, incaVor);
+            selectedStudents.remove(selectedStudents.size() - 1);
+        }
+    }
+
 }

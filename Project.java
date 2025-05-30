@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Project{
     public enum ClientType {
         PRACTICAL,
@@ -19,7 +21,10 @@ public class Project{
         this.projectType = projectType;
     }
 
-    public Project() {
+    public Project() { Random random2 = new Random();
+        int type_number= random2.nextInt(10);
+        if (type_number%2==0) this.projectType=ClientType.THEORETICAL;
+        else this.projectType=ClientType.PRACTICAL;
     }
 
     private ClientType projectType;

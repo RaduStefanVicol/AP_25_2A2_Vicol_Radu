@@ -34,7 +34,7 @@ public class Student extends Person{
     private String name;
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -65,9 +65,9 @@ public class Student extends Person{
         String nameString="?"; String dateString="?"; String regString="?";
         if (this.getName()==null) nameString = "?";
         else nameString = this.getName().toString();
-        if (this.getBirthdate()==null) nameString = "?";
+        if (this.getBirthdate()==null) dateString = "?";
         else dateString = this.getBirthdate().toString();
-        if (this.getRegNumber()==null) nameString = "?";
+        if (this.getRegNumber()==null) regString = "?";
         else regString = this.getRegNumber().toString();
 
         return "Student " + nameString + ", born on " + dateString + ", having regnr:" + regString;

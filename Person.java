@@ -4,11 +4,18 @@ public class Person {
     private String name;
 
     public Person() {
+        setName("???");
+        setBirthdate(LocalDate.of(1,1,1));
     }
 
     public Person(String name) {
         setBirthdate(LocalDate.of(1,1,1));
         this.name=name;
+    }
+
+    public Person(String name, LocalDate birthdate) {
+        this.name = name;
+        this.birthdate = birthdate;
     }
 
     public String getName() {
@@ -26,8 +33,4 @@ public class Person {
         this.birthdate = birthdate;
     }
 
-    public Person(String name, LocalDate birthdate) {
-        this.name = name;
-        this.birthdate = birthdate;
-    }
 }

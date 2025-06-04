@@ -7,7 +7,7 @@ public class Letter {
         this.value = value;
         this.points=setPointValue(value);
     }
-    private int setPointValue(char c){
+    public int setPointValue(char c){
         String s ="ETAON RISHD LFCMU GYPWB VKJXZQ";
         return s.indexOf(c)/6+1;
     }

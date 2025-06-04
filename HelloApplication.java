@@ -14,7 +14,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
@@ -28,7 +27,8 @@ public class HelloApplication extends Application {
     public static BlockingQueue<Letter> getLetterBag() {
         return letterBag;
     }
-
+    public static final Object turnLock = new Object();
+    public static final AtomicInteger currentTurn = new AtomicInteger(1);
     private static BlockingQueue<Letter> letterBag = new LinkedBlockingQueue<>();
     public static ArrayList<Player> playerList= new ArrayList<>();
     public static final AtomicInteger globalCounter = new AtomicInteger(0);
@@ -77,15 +77,49 @@ public class HelloApplication extends Application {
 
     private void startPlayers(int numberOfPlayers) {
         centerPane.getChildren().clear();
-        //reset bag
         resetBag(letterBag);
-        //add players
-        //start threads for each
-        for (int i=0;i<this.numberOfPlayers;i++) {
+        ArrayList<Thread> playerThreads = new ArrayList<>();
+        Dictionary dictionary = new Dictionary(
+                "C:/Users/Acer/Desktop/CodeJava PA/Lab7experiment/src/main/java/org/example/lab7experiment/words.txt"
+        );
+
+        Daemon daemon = new Daemon(playerThreads);
+        daemon.start();
+
+        // Clear old players before starting
+        HelloApplication.playerList.clear();
+
+        for (int i = 0; i < this.numberOfPlayers; i++) {
             Thread player = new HelloThread();
+            playerThreads.add(player);
             player.start();
         }
+
+        // Wait for all players to finish
+        for (Thread thread : playerThreads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        int maxPoints = -1;
+        Player winner = null;
+
+        for (Player player : HelloApplication.playerList) {
+            if (player.getPoints() > maxPoints) {
+                maxPoints = player.getPoints();
+                winner = player;
+            }
+        }
+
+        if (winner != null) {
+            System.out.println("Winner: " + winner.getName() + " with " + winner.getPoints() + " points.");
+        }
     }
+
+
     public void resetBag(BlockingQueue<Letter> letterBag){
         this.letterBag.clear();
         for (char c = 'A'; c <= 'Z'; c++) {
